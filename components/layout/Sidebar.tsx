@@ -63,7 +63,7 @@ export default function Sidebar({ role, name, unread = 0 }: Props) {
       {/* Sidebar */}
       <aside className={clsx(
         'fixed inset-y-0 start-0 z-50 w-60 bg-sf border-e border-bdr flex flex-col overflow-y-auto transition-transform',
-        'md:translate-x-0',
+        'md:!translate-x-0',
         open ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full'
       )}>
         <div className="px-4 pt-5 pb-3 flex items-center justify-between">
