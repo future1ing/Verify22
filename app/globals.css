@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg:   #0b0f0e;
+  --sf:   #111815;
+  --sf2:  #182219;
+  --sf3:  #1f2d22;
+  --bd:   #2a3d2d;
+  --ac:   #4ade80;
+  --acd:  rgba(74,222,128,0.12);
+  --red:  #f87171;
+  --redd: rgba(248,113,113,0.12);
+  --ora:  #fb923c;
+  --orad: rgba(251,146,60,0.12);
+  --blu:  #60a5fa;
+  --blud: rgba(96,165,250,0.1);
+  --tx:   #e8f0e9;
+  --tx2:  #8fa890;
+  --tx3:  #5a7060;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--tx);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: var(--bd); border-radius: 10px; }
+
+/* Shared input style */
+.vf-input {
+  width: 100%;
+  padding: 10px 13px;
+  background: var(--sf2);
+  border: 1px solid var(--bd);
+  border-radius: 7px;
+  color: var(--tx);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.vf-input:focus { border-color: var(--ac); }
+
+/* Card */
+.vf-card {
+  background: var(--sf);
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  padding: 20px 22px;
+}
+
+/* Button primary */
+.vf-btn {
+  padding: 10px 22px;
+  background: var(--ac);
+  color: #0b0f0e;
+  font-weight: 700;
+  font-size: 13px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  transition: opacity 0.2s;
+}
+.vf-btn:hover { opacity: 0.85; }
+.vf-btn:disabled { opacity: 0.5; cursor: not-allowed; }
