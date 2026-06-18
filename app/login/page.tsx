@@ -1,101 +1,62 @@
 'use client'
 
-import { useState, Suspense } from 'react'
-import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Input, Label } from '@/components/ui/Input'
-import { Button } from '@/components/ui/Button'
-import { LangSwitcher } from '@/components/LangSwitcher'
+import { useRouter } from 'next/navigation'
 
-function LoginForm() {
-  const t = useTranslations('auth')
-  const searchParams = useSearchParams()
-  const next = searchParams.get('next')
-  
+export default function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
-    setLoading(true)
     setError('')
-    
+
     const supabase = createClient()
-    
-    const { data, error: err } = await supabase.auth.signInWithPassword({ 
-      email: email.trim().toLowerCase(), 
-      password 
+
+    const { error: err } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
     })
-    
-    if (err || !data.user) { 
-      setError(t('errorInvalid'))
-      setLoading(false)
-      return 
+
+    if (err) {
+      setError(err.message)
+      return
     }
-    
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', data.user.id)
-      .single()
-    
-    const targetUrl = next || (profile?.role === 'admin' ? '/admin' : '/dashboard')
-    window.location.href = targetUrl
+
+    router.refresh()
+    router.push('/dashboard')
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4">
-      <div>
-        <Label>{t('email')}</Label>
-        <Input 
-          type="email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          required 
-        />
-      </div>
-      <div>
-        <Label>{t('password')}</Label>
-        <Input 
-          type="password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          required 
-        />
-      </div>
-      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-      <Button type="submit" disabled={loading} className="w-full mt-4">
-        {loading ? t('loading') : t('login')}
-      </Button>
-    </form>
-  )
-}
+    <form onSubmit={submit} className="flex flex-col gap-4 p-4 border rounded">
+      <h1 className="text-xl font-bold">Login</h1>
+      
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="border p-2"
+        required
+      />
+      
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="border p-2"
+        required
+      />
 
-export default function LoginPage() {
-  const t = useTranslations('auth')
-  
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="flex justify-center mb-6">
-          <LangSwitcher />
-        </div>
-        
-        <Suspense fallback={<p className="text-center">...</p>}>
-          <LoginForm />
-        </Suspense>
-        
-        <p className="mt-5 text-center text-xs text-tx3">
-          {t('noAccount')}{' '}
-          <Link href="/register" className="text-accent underline">
-            {t('createAccess')}
-          </Link>
-        </p>
-      </div>
-    </main>
+      {error && <p className="text-red-500">{error}</p>}
+      
+      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+        Sign In
+      </button>
+    </form>
   )
 }
