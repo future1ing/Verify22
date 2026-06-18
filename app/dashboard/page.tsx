@@ -20,7 +20,7 @@ export default async function DashboardPage() {
   const ta = await getTranslations('alerts')
   const tc = await getTranslations('common')
   const { supabase, user } = await requireUser()
-
+  const isAdmin = user?.app_metadata?.role === 'admin';
   const [profile, { data: alerts }] = await Promise.all([
     getProfile(supabase, user.id),
     supabase.from('alerts').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(5),
@@ -33,7 +33,9 @@ export default async function DashboardPage() {
     <div>
       <div className="mb-6">
         <h2 className="font-display font-extrabold text-2xl text-tx tracking-tight">{t('title')}</h2>
-        <p className="text-xs text-tx2 mt-1">{t('hello')} {profile?.name} · {t('plan')} {profile?.plan} · {t('activeSources')}</p>
+        <p className="text-xs text-tx2 mt-1">
+          {t('hello')} {profile?.name} • {isAdmin ? 'Administrateur' : profile?.plan}
+          </p>
       </div>
 
       <div className="bg-danger/10 border border-danger/30 rounded-xl px-4 py-3 flex items-center justify-between gap-3 mb-5 flex-wrap">
