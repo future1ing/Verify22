@@ -17,25 +17,22 @@ function LoginForm() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true); setError('')
-    const supabase = createClient()
-    const { data, error: err } = await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password })
-    if (err || !data.user) { setError(t('errorInvalid')); setLoading(false); return }
-    const { data: profile } = await supabase.from('profiles').select('role').eq('id', data.user.id).single()
-    router.push(next || (profile?.role === 'admin' ? '/admin' : '/dashboard'))
-    router.refresh()
-  }
-
-  return (
-    <form onSubmit={submit} className="space-y-4">
-      <div><Label>{t('email')}</Label><Input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="email@exemple.com" required /></div>
-      <div><Label>{t('password')}</Label><Input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required /></div>
-      {error && <p className="text-xs text-danger">{error}</p>}
-      <Button type="submit" disabled={loading} className="w-full">{loading ? '…' : t('login')}</Button>
-    </form>
-  )
+ async function submit(e: React.FormEvent) {
+  e.preventDefault()
+  setLoading(true); setError('')
+  const supabase = createClient()
+  
+  const { data, error: err } = await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password })
+  if (err || !data.user) { setError(t('errorInvalid')); setLoading(false); return }
+  
+  const { data: profile } = await supabase.from('profiles').select('role').eq('id', data.user.id).single()
+  
+  
+  const targetUrl = next || (profile?.role === 'admin' ? '/admin' : '/dashboard')
+  
+  // 2. Kan-forciw hard reload b window.location blast router.push
+  window.location.href = targetUrl
+}
 }
 
 export default function LoginPage() {
