@@ -21,6 +21,7 @@ export default function Sidebar({ role, name, unread = 0 }: Props) {
         { href: '/admin/alerts', icon: '🔔', label: t('alerts'), badge: true },
         { href: '/admin/clients', icon: '👥', label: t('clients') },
         { href: '/admin/databases', icon: '🗄️', label: t('databases') },
+        { href: '/admin/pricing', icon: '💳', label: t('pricing') },
         { href: '/admin/stats', icon: '📊', label: t('stats') },
         { href: '/admin/pipeline', icon: '⚙️', label: t('pipeline') },
       ]
